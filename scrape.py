@@ -1,6 +1,8 @@
+from sqlite3 import paramstyle
 import requests
 import bs4
 import re
+from rdflib import Graph, URIRef
 
 # webサイトの情報をもらってきます．
 url = "https://www.iaarc.org/publications/search.php?query=&publication=42"
@@ -23,3 +25,10 @@ for article in articles:
     pairs[doi] = keywords
 # print(pairs)
 # RDFにします．
+# RDFを読み込みます．
+fileName = "isarc2021.bib.ttl"
+g = Graph()
+g.parse(fileName)
+for key in pairs.keys():
+    if(URIRef(key), None, None) in g:
+        print("aru")
