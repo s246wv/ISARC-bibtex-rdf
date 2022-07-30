@@ -1,2 +1,4 @@
 lxml
 rdflib
+requests
+beautifulsoup4
