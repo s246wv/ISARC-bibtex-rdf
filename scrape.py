@@ -1,12 +1,13 @@
 from argparse import Namespace
-from sqlite3 import paramstyle
 import requests
 import bs4
 import re
 from rdflib import Graph, Literal, URIRef, Namespace
+import sys
 
 # webサイトの情報をもらってきます．
-url = "https://www.iaarc.org/publications/search.php?query=&publication=42"
+# url = "https://www.iaarc.org/publications/search.php?query=&publication=42"
+url = sys.argv[1]
 r = requests.get(url)
 
 # keywordsとDOIのペアをもらいます．
@@ -27,8 +28,10 @@ for article in articles:
 # print(pairs)
 # RDFにします．
 # RDFを読み込みます．
-fileName = "isarc2021.bib.ttl"
-outfile = "isarc2021_2.bib.ttl"
+# fileName = "isarc2021.bib.ttl"
+# outfile = "isarc2021_2.bib.ttl"
+fileName = sys.argv[2]+".bib.ttl"
+outfile = sys.argv[2]+"_2.bib.ttl"
 g = Graph()
 g.parse(fileName)
 bibtex_base = Namespace("http://www.edutella.org/bibtex#")
