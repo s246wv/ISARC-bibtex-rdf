@@ -14,6 +14,7 @@ python conversion.py [xml/rdf_file] [extension]
 python scrape.py [url] [rdf_file]
 ```
 
+### 補足
 - *[ISARC](https://www.iaarc.org/publications/search.php?series=1&query=&publication=0)のProc.からrdfを作るためのスクリプトです．他に適用するためには少し修正が必要です．*
 - *conversion.pyでいったんrdf/xmlをttlに変換していますが，特に必要はないですが，現状のスクリプトは一度変換することを前提にしています．*
 
