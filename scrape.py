@@ -1,8 +1,9 @@
+from argparse import Namespace
 from sqlite3 import paramstyle
 import requests
 import bs4
 import re
-from rdflib import Graph, URIRef
+from rdflib import Graph, Literal, URIRef, Namespace
 
 # webサイトの情報をもらってきます．
 url = "https://www.iaarc.org/publications/search.php?query=&publication=42"
@@ -27,8 +28,13 @@ for article in articles:
 # RDFにします．
 # RDFを読み込みます．
 fileName = "isarc2021.bib.ttl"
+outfile = "isarc2021_2.bib.ttl"
 g = Graph()
 g.parse(fileName)
+bibtex_base = Namespace("http://www.edutella.org/bibtex#")
 for key in pairs.keys():
-    if(URIRef(key), None, None) in g:
-        print("aru")
+    for keyword in pairs[key]:
+        # keywordをdoiに対応付けます．
+        g.add((URIRef(key), bibtex_base.keyword, Literal(keyword)))
+g.serialize(destination=outfile, format="ttl")
+# 終わり
