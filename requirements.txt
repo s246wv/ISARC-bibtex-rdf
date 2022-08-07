@@ -2,3 +2,4 @@ lxml
 rdflib
 requests
 beautifulsoup4
+sentence-transformers
