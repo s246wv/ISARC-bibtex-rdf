@@ -41,10 +41,22 @@ for emb, word in zip(embs, words):
     for key in acm_ccs_embs:
         acm_emb = np.array(acm_ccs_embs[key][1], dtype=np.float32)
         cos_sim = util.cos_sim(acm_emb, emb)
-        dict = {acm_ccs_embs[key][0]: cos_sim.item()}
-        dicts.update(dict)
+        dic = {acm_ccs_embs[key][0]: cos_sim.item()}
+        dicts.update(dic)
     key_sim = {word: dicts}
     key_sims.update(key_sim)
 
+key_sims_sorted = {}
+for key in key_sims:
+    key_sim_sorted = sorted(key_sims[key].items(), key=lambda x:x[1], reverse=True)
+    top5 = key_sim_sorted[0:5]
+    b = dict(top5)
+    # b = []
+    # for a in top5:
+    #     print(a)
+    #     b.append(dict(a))
+    dic = {key: b}
+    key_sims_sorted.update(dic)
+
 with open("./hogehoge.json", "w") as f:
-    json.dump(key_sims, f)
+    json.dump(key_sims_sorted, f)
