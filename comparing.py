@@ -46,17 +46,17 @@ for emb, word in zip(embs, words):
     key_sim = {word: dicts}
     key_sims.update(key_sim)
 
+with open("./acs_ccs_key_all.json", "w") as f:
+    json.dump(key_sims_sorted, f)
+
 key_sims_sorted = {}
 for key in key_sims:
     key_sim_sorted = sorted(key_sims[key].items(), key=lambda x:x[1], reverse=True)
     top5 = key_sim_sorted[0:5]
-    b = dict(top5)
-    # b = []
-    # for a in top5:
-    #     print(a)
-    #     b.append(dict(a))
-    dic = {key: b}
+    top5_dic = dict(top5)
+    dic = {key: top5_dic}
     key_sims_sorted.update(dic)
 
-with open("./hogehoge.json", "w") as f:
+with open("./acs_ccs_key_top5.json", "w") as f:
     json.dump(key_sims_sorted, f)
+
