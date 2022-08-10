@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
-from rdflib import Graph
+from rdflib import BNode, Graph, Namespace, URIRef, Literal
 import json
 import numpy as np
 
@@ -33,8 +33,7 @@ print(len(embs))
 with open('acm_ccs_emb.json') as f:
     acm_ccs_embs = json.load(f)
 
-# print(type(acm_ccs_embs['https://dl.acm.org/ccs/10011007.10010940.10010941.10010949.10010957.10011678'][1]))
-key_sims = {} # keywordをkeyにした辞書で，valueはcos_sim?  keywordが同じものはまとめてしまえばいいかしら．
+key_sims = {}
 
 for emb, word in zip(embs, words):
     dicts = {}
@@ -47,7 +46,7 @@ for emb, word in zip(embs, words):
     key_sims.update(key_sim)
 
 with open("./acs_ccs_key_all.json", "w") as f:
-    json.dump(key_sims_sorted, f)
+    json.dump(key_sims, f)
 
 key_sims_sorted = {}
 for key in key_sims:
@@ -59,4 +58,42 @@ for key in key_sims:
 
 with open("./acs_ccs_key_top5.json", "w") as f:
     json.dump(key_sims_sorted, f)
+
+## グラフつくる
+out_graph = Graph()
+out_graph = graph
+bibtex_base = Namespace("http://www.edutella.org/bibtex#") # これ使いまわしよくないわね．
+
+
+for key in key_sims_sorted:
+    bib_ids = out_graph.subjects(predicate=URIRef("http://www.edutella.org/bibtex#keyword"), object=Literal(key))
+    for bib_id in bib_ids:
+        blank = BNode()
+        out_graph.add((URIRef(bib_id), bibtex_base.acmKeywordSimilarity, blank))
+        out_graph.add((blank, bibtex_base.keyword, Literal(key)))
+        # topNはリストの方がよかったかしら？
+        acm_key_top1 = ""
+        acm_key_top2 = ""
+        acm_key_top3 = ""
+        acm_key_top4 = ""
+        acm_key_top5 = ""
+        for acm_key in acm_ccs_embs:
+            if(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[0]):
+                acm_key_top1 = acm_key
+            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[1]):
+                acm_key_top2 = acm_key
+            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[2]):
+                acm_key_top3 = acm_key
+            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[3]):
+                acm_key_top4 = acm_key
+            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[4]):
+                acm_key_top5 = acm_key
+
+        out_graph.add((blank, bibtex_base.top1, URIRef(acm_key_top1)))
+        out_graph.add((blank, bibtex_base.top2, URIRef(acm_key_top2)))
+        out_graph.add((blank, bibtex_base.top3, URIRef(acm_key_top3)))
+        out_graph.add((blank, bibtex_base.top4, URIRef(acm_key_top4)))
+        out_graph.add((blank, bibtex_base.top5, URIRef(acm_key_top5)))
+        
+out_graph.serialize(destination="./hoge.ttl", format="ttl")
 
