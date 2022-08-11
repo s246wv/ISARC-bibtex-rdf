@@ -1,5 +1,4 @@
 from sentence_transformers import util
-from rdflib import BNode, Graph, Namespace, URIRef, Literal
 import json
 import numpy as np
 import sys
