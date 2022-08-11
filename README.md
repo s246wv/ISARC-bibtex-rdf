@@ -21,12 +21,3 @@ python scrape.py [url] [rdf_file]
 ## 謝辞
 [bibtex2rdf - A configurable BibTeX to RDF Converter](http://bibtex2rdf.sourceforge.net/)  
 
-
-
-
-
-
-## 追加機能の設計メモ
-- キーワードを単語埋め込みしてacmのCCSと比較して類似キーワードを紐づけする．acm ccsから検索出来るように．
-  - embeddingはqueryを読み込むようにしてembeddingしたvectorファイルを出力する人にしてしまおうかしら．
-  - comparingはcos_simを計算するだけにしましょうか．vectorファイルを二つ読み込む．
