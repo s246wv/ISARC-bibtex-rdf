@@ -6,6 +6,8 @@ import sys
 
 # 第一引数がembeddingファイル．
 input_emb_file = sys.argv[1]
+# 第二引数が出力ファイル名
+output_filename = sys.argv[2]
 
 # Read acm_css_embedding information. You can change any other reference terminology.
 with open('acm_ccs_emb.json') as f:
@@ -14,19 +16,25 @@ with open('acm_ccs_emb.json') as f:
 with open(input_emb_file, "r") as f:
     input_embs = json.load(f)
 
+words = []
+embs = []
+for key in input_embs:
+    words.extend(list(input_embs[key].keys()))
+    embs.extend(list(input_embs[key].values()))
+
 key_sims = {}
 
 for emb, word in zip(embs, words):
     dicts = {}
     for key in acm_ccs_embs:
-        acm_emb = np.array(acm_ccs_embs[key][1], dtype=np.float32)
-        cos_sim = util.cos_sim(acm_emb, emb)
-        dic = {acm_ccs_embs[key][0]: cos_sim.item()}
+        acm_emb = np.array(list(acm_ccs_embs[key].values())[0], dtype=np.float32)
+        cos_sim = util.cos_sim(acm_emb, np.array(emb, dtype=np.float32))
+        dic = {list(acm_ccs_embs[key].keys())[0]: cos_sim.item()}
         dicts.update(dic)
     key_sim = {word: dicts}
     key_sims.update(key_sim)
 
-with open("./acs_ccs_key_all.json", "w") as f:
+with open(output_filename + "_all.json", "w") as f:
     json.dump(key_sims, f)
 
 key_sims_sorted = {}
@@ -37,44 +45,5 @@ for key in key_sims:
     dic = {key: top5_dic}
     key_sims_sorted.update(dic)
 
-with open("./acs_ccs_key_top5.json", "w") as f:
+with open(output_filename + "_top5.json", "w") as f:
     json.dump(key_sims_sorted, f)
-
-## グラフつくる
-out_graph = Graph()
-out_graph = graph
-bibtex_base = Namespace("http://www.edutella.org/bibtex#") # これ使いまわしよくないわね．
-
-
-for key in key_sims_sorted:
-    bib_ids = out_graph.subjects(predicate=URIRef("http://www.edutella.org/bibtex#keyword"), object=Literal(key))
-    for bib_id in bib_ids:
-        blank = BNode()
-        out_graph.add((URIRef(bib_id), bibtex_base.acmKeywordSimilarity, blank))
-        out_graph.add((blank, bibtex_base.keyword, Literal(key)))
-        # topNはリストの方がよかったかしら？
-        acm_key_top1 = ""
-        acm_key_top2 = ""
-        acm_key_top3 = ""
-        acm_key_top4 = ""
-        acm_key_top5 = ""
-        for acm_key in acm_ccs_embs:
-            if(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[0]):
-                acm_key_top1 = acm_key
-            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[1]):
-                acm_key_top2 = acm_key
-            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[2]):
-                acm_key_top3 = acm_key
-            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[3]):
-                acm_key_top4 = acm_key
-            elif(acm_ccs_embs[acm_key][0] == list(key_sims_sorted[key].keys())[4]):
-                acm_key_top5 = acm_key
-
-        out_graph.add((blank, bibtex_base.top1, URIRef(acm_key_top1)))
-        out_graph.add((blank, bibtex_base.top2, URIRef(acm_key_top2)))
-        out_graph.add((blank, bibtex_base.top3, URIRef(acm_key_top3)))
-        out_graph.add((blank, bibtex_base.top4, URIRef(acm_key_top4)))
-        out_graph.add((blank, bibtex_base.top5, URIRef(acm_key_top5)))
-        
-out_graph.serialize(destination="./hoge.ttl", format="ttl")
-
