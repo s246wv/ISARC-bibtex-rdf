@@ -133,3 +133,5 @@ bibtex
 bibtex2rdf.jar
 bibtex2rdf.log
 temp
+*.mp4
+*.odp
