@@ -27,6 +27,9 @@ select ?id ?keyword ?acmlabel where {
 }
 ```
 
+## 寸劇
+![寸劇](./bibtex2rdfWacmccs.gif)
+
 ## 謝辞
 [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084):
 
