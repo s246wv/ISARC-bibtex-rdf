@@ -1,5 +1,10 @@
 # bibtexからrdfを作る
 
+## 概要
+本作品は、Sibersjkiによるbibtex2rdfで生成したrdfに対して、The International Association for Automation and Robotics in Construction (ISARC)のウェブサイトから取得したキーワード情報を追加するスクリプト及び生成されたrdfファイルです。  
+
+bibtexファイルにはキーワード情報が含まれていないことが多く、bibtex2rdfで生成したrdfファイルでは、キーワード情報を活用することが容易ではありません。本作品では、会議録のウェブサイトから文献情報をスクレイピングすることで、彼らの提供するbibtexファイルに含まれる情報に対して，キーワード情報を付加しています。これにより、個人レベルでの文献情報のLOD的な使い方の幅を広げることが期待できます。  
+
 ## 必要なもの
 java  
 [bibtex2rdf](http://bibtex2rdf.sourceforge.net/)  
