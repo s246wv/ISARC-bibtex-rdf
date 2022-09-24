@@ -28,9 +28,6 @@ select ?id ?label where {
 }
 ```
 
-## おまけ
-[acm_ccs_emb](https://github.com/s246wv/ISARC-bibtex-rdf/tree/main/acm_ccs_emb)にbibtexのキーワードと類似度の高い[ACM Computing Classification System](https://dl.acm.org/ccs)の語を対応づけるスクリプトを置いています．
-
 ## 謝辞
 [bibtex2rdf - A configurable BibTeX to RDF Converter](http://bibtex2rdf.sourceforge.net/)  
 
