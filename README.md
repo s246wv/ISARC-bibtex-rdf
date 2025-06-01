@@ -6,16 +6,19 @@
 bibtexファイルにはキーワード情報が含まれていないことが多く、bibtex2rdfで生成したrdfファイルでは、キーワード情報を活用することが容易ではありません。本作品では、会議録のウェブサイトから文献情報をスクレイピングすることで、彼らの提供するbibtexファイルに含まれる情報に対して，キーワード情報を付加しています。これにより、個人レベルでの文献情報のLOD的な使い方の幅を広げることが期待できます。  
 
 ## 必要なもの
-java  
-[bibtex2rdf](http://bibtex2rdf.sourceforge.net/)  
-python  
-requirements.txtに書いているpythonのパッケージたち  
+- java  
+    - [bibtex2rdf](http://bibtex2rdf.sourceforge.net/)  
+- python  
+    - requirements.txtに書いているpythonのパッケージ
 
 ## 使い方
 
 ```bash
+# bibtex2rdfを用いたRDFファイルの生成
 java -jar bibtex2rdf.jar -schema config.txt -baseuri "https://doi.org/" -enc UTF-8 [bibtex_file] [output_rdf_file]
+# RDFファイルのformat変換
 python conversion.py [xml/rdf_file] [extension]
+# ISARCのサイトからキーワードを取得し、RDFファイルへ反映
 python scrape.py [url] [rdf_file]
 ```
 
@@ -35,4 +38,3 @@ select ?id ?label where {
 
 ## 謝辞
 [bibtex2rdf - A configurable BibTeX to RDF Converter](http://bibtex2rdf.sourceforge.net/)  
-
